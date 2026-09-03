@@ -28,4 +28,11 @@ if st.session_state.doc_id is not None:
                 params={"doc_id": st.session_state.doc_id, "question": question}
             )
             data = response.json()
+
         st.write(data["raspuns"])
+
+        with st.expander("Vezi sursele folosite"):
+            for i, sursa in enumerate(data["surse"]):
+                st.markdown(f"**Sursa {i+1}:**")
+                st.text(sursa)
+                st.divider()

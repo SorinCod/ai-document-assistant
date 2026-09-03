@@ -37,4 +37,4 @@ async def ask_question(doc_id: str, question: str):
     relevant_chunks = search_similar(collection, question)
     answer = generate_answer(relevant_chunks, question)
 
-    return {"raspuns": answer}
+    return {"raspuns": answer, "surse": relevant_chunks}
