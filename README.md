@@ -29,6 +29,13 @@ Create a `.env` file in the project root with the following content:
 
     GROQ_API_KEY=your_key_here
 
+This app uses [Groq](https://console.groq.com) as the LLM provider (free tier, no credit card required). To get your key:
+
+1. Go to [console.groq.com](https://console.groq.com) and sign in (or create an account)
+2. Open the **API Keys** section
+3. Click **Create API Key**, give it a name, and copy the generated key (it starts with `gsk_`)
+4. Paste it into your `.env` file, replacing `your_key_here`
+
 ## Running the app
 
 Start the backend (in one terminal):
