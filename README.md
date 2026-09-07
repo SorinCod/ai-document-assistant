@@ -56,6 +56,13 @@ The app will be available at `http://localhost:8501`.
 - Semantic search via embeddings, not just keyword matching
 - Context-aware answer generation, grounded strictly in the document's content
 
+## Sample files
+
+The repository includes two PDFs you can use to try out the app right away:
+
+- `sample-document.pdf` — a valid document (a short course on Machine Learning) to test the normal upload and question-answering flow
+- `broken-file.pdf` — an intentionally invalid PDF, useful for testing the app's error handling
+
 ## Project structure
 
     ai-document-assistant/
