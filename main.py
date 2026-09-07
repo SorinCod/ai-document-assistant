@@ -12,7 +12,7 @@ collections = {}
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...)):
     if not file.filename.lower().endswith(".pdf"):
-        raise HTTPException(status_code=400, detail="Doar fisiere PDF sunt acceptate.")
+        raise HTTPException(status_code=400, detail="Only PDF files are accepted.")
 
     doc_id = str(uuid.uuid4())
     temp_path = f"temp_{doc_id}.pdf"
@@ -24,14 +24,14 @@ async def upload_pdf(file: UploadFile = File(...)):
         text = extract_text_from_pdf(temp_path)
     except Exception:
         os.remove(temp_path)
-        raise HTTPException(status_code=400, detail="Nu am putut citi acest PDF. Fisierul poate fi corupt.")
+        raise HTTPException(status_code=400, detail="Could not read this PDF. The file might be corrupted.")
 
     os.remove(temp_path)
 
     if not text.strip():
         raise HTTPException(
             status_code=400,
-            detail="Nu am gasit text in acest PDF. Poate fi un document scanat (imagine)."
+            detail="No text found in this PDF. It might be a scanned document (image)."
         )
 
     chunks = chunk_text(text)
@@ -40,22 +40,22 @@ async def upload_pdf(file: UploadFile = File(...)):
     add_chunks(collection, chunks)
     collections[doc_id] = collection
 
-    return {"doc_id": doc_id, "numar_chunks": len(chunks)}
+    return {"doc_id": doc_id, "num_chunks": len(chunks)}
 
 @app.post("/ask")
 async def ask_question(doc_id: str, question: str):
     if not question.strip():
-        raise HTTPException(status_code=400, detail="Intrebarea nu poate fi goala.")
+        raise HTTPException(status_code=400, detail="The question cannot be empty.")
 
     collection = collections.get(doc_id)
     if not collection:
-        raise HTTPException(status_code=404, detail="Documentul nu a fost gasit. Fa upload la un PDF intai.")
+        raise HTTPException(status_code=404, detail="Document not found. Please upload a PDF first.")
 
     relevant_chunks = search_similar(collection, question)
 
     try:
         answer = generate_answer(relevant_chunks, question)
     except Exception:
-        raise HTTPException(status_code=503, detail="Serviciul de generare a raspunsurilor este momentan indisponibil. Incearca din nou in cateva momente.")
+        raise HTTPException(status_code=503, detail="The answer generation service is currently unavailable. Please try again in a few moments.")
 
-    return {"raspuns": answer, "surse": relevant_chunks}
+    return {"answer": answer, "sources": relevant_chunks}

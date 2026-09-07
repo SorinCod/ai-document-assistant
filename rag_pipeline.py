@@ -7,15 +7,15 @@ client_groq = Groq(api_key=os.environ["GROQ_API_KEY"])
 
 def generate_answer(context_chunks: list[str], question: str) -> str:
     context = "\n\n".join(context_chunks)
-    prompt = f"""Foloseste DOAR informatiile din contextul de mai jos ca sa raspunzi la intrebare.
-Daca raspunsul nu se gaseste in context, spune ca nu ai suficiente informatii.
+    prompt = f"""Use ONLY the information from the context below to answer the question.
+If the answer is not found in the context, say that you don't have enough information.
 
 Context:
 {context}
 
-Intrebare: {question}
+Question: {question}
 
-Raspuns:"""
+Answer:"""
 
     response = client_groq.chat.completions.create(
         model="openai/gpt-oss-120b",
